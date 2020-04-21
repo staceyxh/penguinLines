@@ -1,0 +1,25 @@
+
+.off,.fade{
+    opacity:.1;
+}
+
+
+#tooltip {
+position: absolute;
+width: 200px;
+height: auto;
+padding: 10px;
+background-color: white;
+border-radius: 10px;
+box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4); 
+pointer-events: none;
+}
+
+#tooltip.hidden { 
+    display: none;
+}
+
+#tooltip img { 
+    width:100px;
+    height:100px;
+}

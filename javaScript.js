@@ -45,12 +45,9 @@ var initGraph = function(target,students)
         .range([0,graph.width])
     
 
-    
+    //console.log(d3.min(students,getQuiz),d3.max(students,getQuiz))
     var yScale = d3.scaleLinear()
-                .domain([
-                          d3.min(students,getQuiz),
-                          d3.max(students,getQuiz)
-                        ])
+                .domain([0,10])
         .range([graph.height,0])
     
     
@@ -121,7 +118,7 @@ var drawLines = function(students,graph,target,
     
     var lineGenerator = d3.line()
         .x(function(quize,i) { return xScale(i);})
-        .y(function(quize)   { return yScale(quize);})
+        .y(function(quize)   { return yScale(quize.grade);})
     
     
     var lines = d3.select(target)
@@ -132,25 +129,36 @@ var drawLines = function(students,graph,target,
         .append("g")
         .classed("line",true)
         .attr("fill","none")
-        .on("mouseover",function(subject)
+        .attr("stroke","black")
+        .attr("stroke-width",3)
+        .on("mouseover",function(student)
         {   
             if(! d3.select(this).classed("off"))
             {
             d3.selectAll(".line")
             .classed("fade",true);
-            
+            var xPosition =d3.event.pageX;
+            var yPosition = d3.event.pageY;
             d3.select(this)
-                .classed("fade",false)
-                .raise(); //move to top
+            .classed("fade",false)
+            .raise();
+                
+            d3.select("#tooltip") 
+            .style("left", xPosition + "px") 
+            .style("top", yPosition + "px") 
+            .select("#image")
+            .attr("src","imgs/"+ student.picture);
+            d3.select("#tooltip").classed("hidden", false);//move to top
             }
         })
-        .on("mouseout",function(subject)
+        .on("mouseout",function(student)
            {
             if(! d3.select(this).classed("off"))
             {
             
             d3.selectAll(".line")
                 .classed("fade",false);
+            d3.select("#tooltip").classed("hidden", true);
             }
             
         })
@@ -158,6 +166,6 @@ var drawLines = function(students,graph,target,
     
     lines.append("path")
         .datum(function(student) 
-            { return student.quizes.map(function(quize){return quize.grade})})
+            { return student.quizes})
         .attr("d",lineGenerator); 
 }
